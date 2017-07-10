@@ -4,15 +4,19 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "nodemon -e js,mustache ./app.js",
+    "testSuite": "nodemon -e js,mustache ./test_app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "chai": "^4.0.2",
     "express": "^4.15.3",
     "mocha": "^3.4.2",
+    "mongoose": "^4.10.8",
     "mustache-express": "^1.2.5",
     "supertest": "^3.0.0"
   }

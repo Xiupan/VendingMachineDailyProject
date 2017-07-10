@@ -34,6 +34,16 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
-app.get('/api/todos', function(request, response){
-  console.log('api/todos poop');
+const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+mongoose.connect('mongodb://localhost:27017/vendingDB');
+
+const Item = require("./models/Items")
+
+app.listen(3000, function () {
+    console.log('Vending Machine App is running!')
+});
+
+app.get('/api/customer/items', function(request, response){
+  response.json();
 })
