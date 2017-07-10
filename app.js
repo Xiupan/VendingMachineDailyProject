@@ -22,10 +22,8 @@
 //       "cost": 35,
 //       "quantity": 10
 
-// GET /api/customer/items - get a list of items
 // POST /api/customer/items/:itemId/purchases - purchase an item
 // GET /api/vendor/purchases - get a list of all purchases with their item and date/time
-// GET /api/vendor/money - get a total amount of money accepted by the machine
 // POST /api/vendor/items - add a new item not previously existing in the machine
 // PUT /api/vendor/items/:itemId - update item quantity, description, and cost
 
@@ -33,17 +31,38 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const app = express();
+const bodyParser = require("body-parser");
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 mongoose.connect('mongodb://localhost:27017/vendingDB');
 
-const Item = require("./models/Items")
+app.use(bodyParser.urlencoded({extended: false}));
 
-app.listen(3000, function () {
-    console.log('Vending Machine App is running!')
+const Item = require("./models/Items");
+const Total = require("./models/Totals");
+
+app.listen(3000, function(){
+    console.log('Vending Machine App is running!');
 });
 
-app.get('/api/customer/items', function(request, response){
-  response.json();
+app.get('/api/customer/items', function(request, response){ // lists all items in the Items Collection
+  Item.find()
+  .then(function(allItems){
+    response.json(allItems);
+  })
+})
+
+app.get('/api/vendor/money', function(request, response){ // lists total money in the vending machine
+  Total.find({}, {money: 1}) // projection only includes money
+  .then(function(allTotals){
+    response.json(allTotals);
+  })
+})
+
+app.get('/api/vendor/purchases', function(request, response){ // lists all purchases with item descriptions and time purchased
+  Total.find({}, {"purchases.description": 1, "purchases.time": 1}) // projection only includes description and time
+  .then(function(allPurchases){
+    response.json(allPurchases);
+  })
 })
