@@ -35,8 +35,10 @@ describe('API Testing Suite!', function(){
     .get('/api/vendor/purchases')
     .expect(200)
     .expect(function(res){
-      console.log(res.body[0].purchases[0].time)
-      assert.equal(typeof res.body[0].purchases[0].time, 'string')
+      for (let i = 0; i < res.body[0].purchases.length; i++) {
+        console.log(res.body[0].purchases[i].time);
+        assert.equal(typeof res.body[0].purchases[i].time, 'string')
+      }
     })
     .end(done);
   })
