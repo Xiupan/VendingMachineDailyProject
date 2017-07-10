@@ -48,6 +48,7 @@ app.listen(3000, function(){
 app.get('/api/customer/items', function(request, response){ // lists all items in the Items Collection
   Item.find()
   .then(function(allItems){
+    console.log('All items returned!');
     response.json(allItems);
   })
 })
@@ -65,3 +66,10 @@ app.get('/api/vendor/purchases', function(request, response){ // lists all purch
     response.json(allPurchases);
   })
 })
+
+// app.post('/api/customer/items/:itemId/purchases', function(request, response){
+//   var itemId = request.params.itemId;
+//
+// })
+
+module.exports = app;
