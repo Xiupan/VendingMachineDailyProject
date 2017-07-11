@@ -1,11 +1,13 @@
-// A customer should be able to get a list of the current items, their costs, and quantities of those items
+// ***A customer should be able to get a list of the current items, their costs, and quantities of those items
 // A customer should be able to buy an item using money
 // A customer should be able to buy an item, paying more than the item is worth (imagine putting a dollar in a machine for a 65-cent item) and get correct change. This change is just an amount, not the actual coins.
 // A customer should not be able to buy items that are not in the machine, but instead get an error
-// A vendor should be able to see total amount of money in machine
-// A vendor should be able to see a list of all purchases with their time of purchase
+// ***A vendor should be able to see total amount of money in machine
+// ***A vendor should be able to see a list of all purchases with their time of purchase
 // A vendor should be able to update the description, quantity, and costs of items in the machine
 // A vendor should be able to add a new item to the machine
+
+// *** Means completed.
 
 // Model:
 // "status": "success",
@@ -22,7 +24,6 @@
 //       "cost": 35,
 //       "quantity": 10
 
-// POST /api/customer/items/:itemId/purchases - purchase an item
 // POST /api/vendor/items - add a new item not previously existing in the machine
 // PUT /api/vendor/items/:itemId - update item quantity, description, and cost
 
@@ -67,9 +68,18 @@ app.get('/api/vendor/purchases', function(request, response){ // lists all purch
   })
 })
 
-// app.post('/api/customer/items/:itemId/purchases', function(request, response){
-//   var itemId = request.params.itemId;
-//
-// })
+app.post('/api/customer/items/:itemId/purchases', function(request, response){ // adds the cost of the purchased item to the total money
+  var itemId = request.params.itemId;
+  Item.findOne({_id: itemId})
+  .then(function(itemToPurchase){
+    itemToPurchase.quantity = itemToPurchase.quantity - 1; // subtracts one from quantity of item when a purchase is made
+    Total.find()
+    .then(function(machineTotals){ // adds the cost of the item to the total amt of money in the machine. Also adds the transaction to the machine's transaction history array!
+      machineTotals[0].money += itemToPurchase.cost;
+      machineTotals[0].purchases.push({description: itemToPurchase.description, quantity: 1, time: Date.now()})
+      response.json(machineTotals[0]);
+    })
+  })
+})
 
 module.exports = app;

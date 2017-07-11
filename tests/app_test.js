@@ -10,7 +10,7 @@
 const chai = require("chai");
 const request = require("supertest");
 const assert = chai.assert;
-const app = require("./app");
+const app = require("../app");
 
 describe('API Testing Suite!', function(){
   it('Tests displaying all items in vending machine.', function(done){
