@@ -86,4 +86,18 @@ app.post('/api/customer/items/:itemId/purchases', function(request, response){ /
   })
 })
 
+app.post('/api/vendor/items', function(request, response){ // adds new items to the Items collection. Hard-coded values for now. Can switch to req.body stuff to pull from a form?
+  const itemToAdd = new Item()
+  itemToAdd.description = "Doritos";
+  itemToAdd.quantity = 20;
+  itemToAdd.cost = 60;
+  itemToAdd.save()
+  .then(function(newItem){
+    Item.find()
+    .then(function(allItems){
+      response.json(allItems)
+    })
+  })
+})
+
 module.exports = app;
