@@ -24,9 +24,6 @@
 //       "cost": 35,
 //       "quantity": 10
 
-// POST /api/vendor/items - add a new item not previously existing in the machine
-// PUT /api/vendor/items/:itemId - update item quantity, description, and cost
-
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -96,6 +93,24 @@ app.post('/api/vendor/items', function(request, response){ // adds new items to 
     Item.find()
     .then(function(allItems){
       response.json(allItems)
+    })
+  })
+})
+
+
+app.put('/api/vendor/items/:itemId', function(request, response){ // vendor can update a specific item's values. Values hard-coded for now.
+  var itemId = request.params.itemId;
+  Item.findOne({_id: itemId})
+  .then(function(foundItem){
+    foundItem.description = "Corn Chips";
+    foundItem.quantity = 20;
+    foundItem.cost = 40;
+    foundItem.save()
+    .then(function(updatedItem){
+      Item.find()
+      .then(function(allItems){
+        response.json(allItems)
+      })
     })
   })
 })
