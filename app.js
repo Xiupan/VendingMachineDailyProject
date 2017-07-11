@@ -67,6 +67,8 @@ app.get('/api/vendor/purchases', function(request, response){ // lists all purch
 
 app.post('/api/customer/items/:itemId/purchases', function(request, response){ // adds the cost of the purchased item to the total money
   var itemId = request.params.itemId;
+  var cashInserted = 500;
+
   Item.findOne({_id: itemId})
   .then(function(itemToPurchase){
     itemToPurchase.quantity = itemToPurchase.quantity - 1; // subtracts one from quantity of item when a purchase is made
@@ -74,8 +76,10 @@ app.post('/api/customer/items/:itemId/purchases', function(request, response){ /
     .then(function(){
       Total.find()
       .then(function(machineTotals){ // adds the cost of the item to the total amt of money in the machine. Also adds the transaction to the machine's transaction history array!
-      machineTotals[0].money += itemToPurchase.cost;
-      machineTotals[0].purchases.push({description: itemToPurchase.description, quantity: 1, time: Date.now()})
+      if(cashInserted > itemToPurchase.cost){ // only continues if the customer put enough money into the machine
+        machineTotals[0].money += itemToPurchase.cost;
+        machineTotals[0].purchases.push({description: itemToPurchase.description, quantity: 1, time: Date.now(), moneyGiven: cashInserted, changeGiven: cashInserted - itemToPurchase.cost});
+      }
       machineTotals[0].save();
       response.json(machineTotals[0]);
       })

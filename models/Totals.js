@@ -5,7 +5,9 @@ const totalSchema = new mongoose.Schema({
   purchases: [{
     description: {type: String, required: true},
     quantity: {type: Number, required: true},
-    time: {type: Date, required: true}
+    time: {type: Date, required: true},
+    moneyGiven: {type: Number},
+    changeGiven: {type: Number}
   }]
 })
 

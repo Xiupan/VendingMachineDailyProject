@@ -42,4 +42,15 @@ describe('API Testing Suite!', function(){
     })
     .end(done);
   })
+  it('Tests to see if a customer can purchase an item, and everything updates correctly.', function(done){
+    request(app)
+    .post('/api/customer/items/5963d14bc78b4e71a39d1f23/purchases')
+    .send({description: "Corn Chips", quantity: 1, time: Date.now()})
+    .expect(200)
+    .expect(function(res){
+      console.log(res.body.purchases[res.body.purchases.length - 1]); // displays the most recent transaction
+      assert.equal(res.body.purchases[res.body.purchases.length - 1].description, "Corn Chips")
+    })
+    .end(done);
+  })
 })
